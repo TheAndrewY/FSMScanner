@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.jeasy:easy-states:2.0.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
+}
+
+test {
+    useJUnitPlatform()
+}
