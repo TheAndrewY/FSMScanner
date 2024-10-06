@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.jeasy.states.api.FiniteStateMachine;
-import org.jeasy.states.api.FiniteStateMachineException;
 import org.jeasy.states.api.State;
 import org.jeasy.states.api.Transition;
 import org.jeasy.states.core.TransitionBuilder;
@@ -12,7 +11,6 @@ import org.jeasy.states.core.FiniteStateMachineBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -28,7 +26,7 @@ import java.util.Set;
  */
 class Turnstile {
 
-    public static void main(String[] args) throws FiniteStateMachineException {
+    public static void main(String[] args) {
 
         /*
          * Define FSM states
@@ -83,13 +81,6 @@ class Turnstile {
 
         ObjectMapper om = new ObjectMapper();
         om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
-        /*
-        try {
-            om.writeValue(new File("fsm.json"),turnstileStateMachine);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-         */
         SimpleModule module = new SimpleModule();
         module.addDeserializer(FiniteStateMachineBuilder.class, new FSMD());
         om.registerModule(module);
@@ -101,8 +92,6 @@ class Turnstile {
         }
 
         /*
-
-
         System.out.println("Turnstile initial state : " + turnstileStateMachine.getCurrentState().getName());
 
         Scanner scanner = new Scanner(System.in);
