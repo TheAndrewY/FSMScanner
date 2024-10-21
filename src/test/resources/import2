@@ -1,0 +1,11 @@
+// Simple FSM used for testing deserialization
+strict digraph A {
+  "Not Studying";
+  Studying;
+  Playing;
+  "Not Studying" -> Studying;
+  "Not Studying" -> Playing;
+  Studying -> Playing;
+  Playing -> "Not Studying";
+  Playing -> Studying;
+}
