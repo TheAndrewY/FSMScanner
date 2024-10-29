@@ -1,0 +1,8 @@
+strict digraph G {
+  Open;
+  Close;
+  Error;
+  Open -> Close;
+  Close -> Close;
+  Open -> Error;
+}
