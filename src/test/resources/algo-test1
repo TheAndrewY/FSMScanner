@@ -1,0 +1,14 @@
+// C-style pointers FSM 3.3
+strict digraph G {
+  valid;
+  dangle;
+  null;
+  err;
+  valid -> dangle;
+  valid -> null;
+  dangle -> null;
+  dangle -> valid;
+  dangle -> err;
+  null -> valid;
+  null -> err;
+}
