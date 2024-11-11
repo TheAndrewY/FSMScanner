@@ -25,4 +25,20 @@ public class MyUtils {
         }
         return setPaths;
     }
+    /**
+     * Method to convert a GraphPath object into a DefaultDirectedGraph object
+     *
+     * @param path the GraphPath object you want to convert into a directed graph.
+     * @return Directed Graph containing all the path's vertices and edges
+     */
+    public DefaultDirectedGraph<String,DefaultEdge> pathToGraph(GraphPath<String,DefaultEdge> path){
+        DefaultDirectedGraph<String,DefaultEdge> result = new DefaultDirectedGraph<>(DefaultEdge.class);
+        for(String x : path.getVertexList()){
+            result.addVertex(x);
+        }
+        for(DefaultEdge x : path.getEdgeList()){
+            result.addEdge(path.getGraph().getEdgeSource(x),path.getGraph().getEdgeTarget(x));
+        }
+        return result;
+    }
 }
