@@ -1,0 +1,14 @@
+// Simple FSM used for testing pathToGraph function
+strict digraph A {
+  "Not Studying";
+  Studying;
+  Playing;
+  Sleeping;
+  "Not Studying" -> Studying;
+  "Not Studying" -> Playing;
+  "Not Studying" -> Sleeping;
+  Studying -> Playing;
+  Playing -> "Not Studying";
+  Playing -> Studying;
+  Playing -> Sleeping;
+}

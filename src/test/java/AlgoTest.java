@@ -1,4 +1,5 @@
 import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.dot.DOTImporter;
@@ -6,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -51,5 +53,31 @@ public class AlgoTest {
         for (GraphPath<String, DefaultEdge> x : errSubseqs) {
             assertTrue(expectedSet.contains(x.toString().replaceAll("\\s", "")), "error-inducing subsequence mismatch");
         }
+    }
+    /**
+     * Tests the pathToGraph method in Utils specifically with "import3" FSM/Graph
+     *
+     * @throws IOException if an I/O error occurs during the reading of the DOT file.
+     */
+
+    @Test
+    public void pathToGraph1() throws IOException {
+        DefaultDirectedGraph<String, DefaultEdge> origGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        DOTImporter<String, DefaultEdge> importer = new DOTImporter<>();
+        importer.setVertexFactory(Function.identity());
+        try (FileReader reader = new FileReader("src/test/resources/import3")) {
+            importer.importGraph(origGraph, reader);
+        }
+        MyUtils utils = new MyUtils();
+        AllDirectedPaths<String,DefaultEdge> adp = new AllDirectedPaths<>(origGraph);
+        ArrayList<String> pathGraphs = new ArrayList<>();
+        for(GraphPath<String,DefaultEdge> x : adp.getAllPaths("Not Studying","Sleeping",true,null)){
+            pathGraphs.add(utils.pathToGraph(x).toString().replaceAll("\\s", ""));
+        }
+        ArrayList<String> validGraphs = new ArrayList<>();
+        validGraphs.add("([NotStudying,Studying,Playing,Sleeping],[(NotStudying,Studying),(Studying,Playing),(Playing,Sleeping)])");
+        validGraphs.add("([NotStudying,Playing,Sleeping],[(NotStudying,Playing),(Playing,Sleeping)])");
+        validGraphs.add("([NotStudying,Sleeping],[(NotStudying,Sleeping)])");
+        assertTrue(pathGraphs.containsAll(validGraphs));
     }
 }
