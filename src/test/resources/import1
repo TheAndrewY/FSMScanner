@@ -1,9 +1,0 @@
-// Simple file "Open, Close" cycle FSM
-strict digraph G {
-  Open;
-  Close;
-  Error;
-  Open -> Close;
-  Close -> Close;
-  Open -> Error;
-}

@@ -2,7 +2,7 @@ strict digraph G {
   Open;
   Close;
   Error;
-  Open -> Close;
-  Close -> Close;
-  Open -> Error;
+  Open -> Close [ label="closeDoor" ];
+  Close -> Close [ label="closeDoor" ];
+  Open -> Error [ label="openDoor" ];
 }
