@@ -1,0 +1,13 @@
+// Database next row FSM 3.41
+strict digraph G {
+    start;
+    row;
+    end;
+    err;
+    start -> row [ label="next(true)" ];
+    start -> end [ label="next(false)" ];
+    row -> row [ label="next(true)" ];
+    row -> end [ label="next(false)" ];
+    end -> err [ label="next(true)" ];
+    end -> err [ label="next(false)" ];
+}

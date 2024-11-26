@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,5 +65,29 @@ public class AlgoTest {
         validGraphs.add("([NotStudying,Playing,Sleeping],[Play=(NotStudying,Playing),Sleep=(Playing,Sleeping)])");
         validGraphs.add("([NotStudying,Sleeping],[Sleep=(NotStudying,Sleeping)])");
         assertTrue(pathGraphs.containsAll(validGraphs));
+    }
+    /**
+     * Tests the generateSubpaths method on the Error-inducing subsequences generated from a DOT file FSM.
+     *
+     * @throws IOException if an I/O error occurs during the reading of the DOT file.
+     */
+    @Test
+    public void subpathTest1() throws IOException {
+        MyUtils utils = new MyUtils();
+        DefaultDirectedGraph<String, LabeledEdge> origGraph = utils.dotToFSM("src/test/resources/algo-test2");
+        List<String> expectedSubpaths = new ArrayList<>();
+        expectedSubpaths.add("[next(true)]");
+        expectedSubpaths.add("[next(true), next(false)]");
+        expectedSubpaths.add("[next(true), next(true)]");
+        expectedSubpaths.add("[next(true), next(false), next(true)]");
+        expectedSubpaths.add("[next(false), next(true)]");
+        expectedSubpaths.add("[next(false)]");
+        Set<List<LabeledEdge>> generatedErrSubpaths = new TreeSet<>(Comparator.comparing(List<LabeledEdge>::toString));
+        for(GraphPath<String,LabeledEdge> errPath : utils.allErrPaths(origGraph)){
+            generatedErrSubpaths.addAll(utils.generateSubpaths(errPath));
+        }
+        for(List<LabeledEdge> subpath : generatedErrSubpaths){
+            assertTrue(expectedSubpaths.contains(subpath.toString()));
+        }
     }
 }

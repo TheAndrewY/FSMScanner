@@ -5,6 +5,8 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +77,37 @@ public class MyUtils {
                 }
             }
             return graph;
+        }
+    }
+    /**
+     * Generates all non-empty, ordered sub paths from a given GraphPath.
+     *
+     * @param path the GraphPath from which to generate sub paths
+     * @return a list of lists, where each inner list is a non-empty ordered sub path of edges from the path parameter
+     */
+    public List<List<LabeledEdge>> generateSubpaths(GraphPath<String, LabeledEdge> path) {
+            List<LabeledEdge> edgeList = new ArrayList<>(path.getEdgeList());
+        List<List<LabeledEdge>> subpaths = new ArrayList<>();
+        subpathHelper(edgeList, new ArrayList<>(), subpaths);
+        return subpaths;
+    }
+
+    /**
+     * A recursive helper method to generate all non-empty ordered subsets of edges.
+     *
+     * @param edgeList the original list of edges
+     * @param current the current subset of edges being constructed
+     * @param subpaths a list to store all non-empty subsets of edges
+     */
+    private void subpathHelper(List<LabeledEdge> edgeList, List<LabeledEdge> current, List<List<LabeledEdge>> subpaths) {
+        if (!current.isEmpty()) {
+            subpaths.add(new ArrayList<>(current));
+        }
+        for (int i = 0; i < edgeList.size(); i++) {
+            LabeledEdge edge = edgeList.get(i);
+            current.add(edge);
+            subpathHelper(edgeList.subList(i + 1, edgeList.size()), current, subpaths);
+            current.remove(current.size() - 1);
         }
     }
 }
