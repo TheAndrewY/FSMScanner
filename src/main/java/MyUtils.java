@@ -5,6 +5,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -88,9 +89,6 @@ public class MyUtils {
             List<LabeledEdge> edgeList = new ArrayList<>(path.getEdgeList());
         List<List<LabeledEdge>> subpaths = new ArrayList<>();
         subpathHelper(edgeList, new ArrayList<>(), subpaths);
-        // Will remove all subpaths that arent valid (possible) or do not start with the original
-        // path's starting vertex
-
         return subpaths;
     }
 
