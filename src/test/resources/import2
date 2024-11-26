@@ -3,9 +3,9 @@ strict digraph A {
   "Not Studying";
   Studying;
   Playing;
-  "Not Studying" -> Studying;
-  "Not Studying" -> Playing;
-  Studying -> Playing;
-  Playing -> "Not Studying";
-  Playing -> Studying;
+  "Not Studying" -> Studying [ label="Study" ];
+  "Not Studying" -> Playing [ label="Play" ];
+  Studying -> Playing [ label="Play" ];
+  Playing -> "Not Studying" [ label="Break" ];
+  Playing -> Studying [ label="Study" ];
 }

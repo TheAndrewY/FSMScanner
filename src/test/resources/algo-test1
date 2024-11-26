@@ -4,11 +4,11 @@ strict digraph G {
   dangle;
   null;
   err;
-  valid -> dangle;
-  valid -> null;
-  dangle -> null;
-  dangle -> valid;
-  dangle -> err;
-  null -> valid;
-  null -> err;
+  valid -> dangle [ label="free" ];
+  valid -> null [ label="assign null" ];
+  dangle -> null [ label="assign null" ];
+  dangle -> valid [ label="assign valid" ];
+  dangle -> err [ label="free" ];
+  null -> valid [ label="assign valid" ];
+  null -> err [ label="free" ];
 }
