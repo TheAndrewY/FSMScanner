@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,19 +26,19 @@ public class AlgoTest {
     public void algoTest1() throws IOException {
         MyUtils utils = new MyUtils();
         DefaultDirectedGraph<String, LabeledEdge> algoGraph1 = utils.dotToFSM("src/test/resources/algo-test1");
-        Set<GraphPath<String, LabeledEdge>> errSubseqs = utils.allErrPaths(algoGraph1);
+        Set<GraphPath<String, LabeledEdge>> errSubseqs = utils.allErrPaths(algoGraph1,"valid");
         //If the found number of error-inducing subsequences is not equal, immediately fail testcase
-        assertEquals(errSubseqs.size(), 8, "# of error-inducing subsequences does not match");
+        assertEquals(errSubseqs.size(), 6, "# of error-inducing subsequences does not match");
 
         // Set of predetermined (manually found) expected results
         // String representation of all subsequences/paths
         HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("[free, assign null, free]");
+        expectedSet.add("[assign valid, free, free]");
         expectedSet.add("[free, free]");
         expectedSet.add("[assign null, free]");
         expectedSet.add("[assign valid, assign null, free]");
-        expectedSet.add("[free]");
-        expectedSet.add("[assign valid, free, free]");
+        expectedSet.add("[free, assign null, free]");
+        expectedSet.add("[assign valid, free, assign null, free]");
         for (GraphPath<String, LabeledEdge> x : errSubseqs) {
             assertTrue(expectedSet.contains(x.toString()), "error-inducing subsequence mismatch");
         }
@@ -76,18 +74,20 @@ public class AlgoTest {
         MyUtils utils = new MyUtils();
         DefaultDirectedGraph<String, LabeledEdge> origGraph = utils.dotToFSM("src/test/resources/algo-test2");
         List<String> expectedSubpaths = new ArrayList<>();
+        Set<String> generatedErrSubpathsString = new HashSet<>();
         expectedSubpaths.add("[next(true)]");
+        expectedSubpaths.add("[next(false), [next(true), next(false)]]");
         expectedSubpaths.add("[next(true), next(false)]");
-        expectedSubpaths.add("[next(true), next(true)]");
-        expectedSubpaths.add("[next(true), next(false), next(true)]");
-        expectedSubpaths.add("[next(false), next(true)]");
+        expectedSubpaths.add("[next(true), next(false), [next(true), next(false)]]");
         expectedSubpaths.add("[next(false)]");
-        Set<List<LabeledEdge>> generatedErrSubpaths = new TreeSet<>(Comparator.comparing(List<LabeledEdge>::toString));
-        for(GraphPath<String,LabeledEdge> errPath : utils.allErrPaths(origGraph)){
-            generatedErrSubpaths.addAll(utils.generateSubpaths(errPath));
+        expectedSubpaths.add("[[next(true), next(false)]]");
+        for(GraphPath<String,LabeledEdge> errPath : utils.allErrPaths(origGraph,"start")){
+            for(GraphPath<String,LabeledEdge> subErrPath : utils.generateSubpaths(errPath)){
+                generatedErrSubpathsString.add(subErrPath.toString());
+            }
         }
-        for(List<LabeledEdge> subpath : generatedErrSubpaths){
-            assertTrue(expectedSubpaths.contains(subpath.toString()));
-        }
+        assertTrue(expectedSubpaths.containsAll(generatedErrSubpathsString));
+        assertTrue(generatedErrSubpathsString.containsAll(expectedSubpaths));
+
     }
 }
