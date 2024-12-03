@@ -42,7 +42,7 @@ public class MyUtils {
             result.addVertex(x);
         }
         for(LabeledEdge x : path.getEdgeList()){
-            result.addEdge(x.getSource(),x.getTarget(),new LabeledEdge(x.toString()));
+            result.addEdge(x.getSource(),x.getTarget(),new LabeledEdge(x.getLabels()));
         }
         return result;
     }
@@ -60,8 +60,6 @@ public class MyUtils {
             result.addVertex(x.getTarget());
             result.addEdge(x.getSource(),x.getTarget(),new LabeledEdge(x.getLabels()));
         }
-        // Since this graph mimics the list, there will only be one path from the
-        // list's source to target, therefore we fetch the first graphPath and return it.
         AllDirectedPaths<String,LabeledEdge> adp = new AllDirectedPaths<>(result);
         String pathSrc = listPath.get(0).getSource();
         String pathTarget = listPath.get(listPath.size()-1).getTarget();
@@ -71,6 +69,8 @@ public class MyUtils {
         if(pathSrc.equals(pathTarget)){
             return adp.getAllPaths(pathSrc,pathTarget,false,1).get(1);
         }
+        //If the path is not just a looped edge, we need to consider the most complicated path in this
+        // minimized graph mimicking the listPath, which will give us the identical graphPath
         List<GraphPath<String, LabeledEdge>> resolvedPath = adp.getAllPaths(pathSrc,pathTarget,false,listPath.size());
         if (!resolvedPath.isEmpty()){
             return resolvedPath.get(resolvedPath.size()-1);
@@ -129,7 +129,9 @@ public class MyUtils {
         for(List<LabeledEdge> listPath : subpaths){
             if(listPath!=null){
                 GraphPath<String,LabeledEdge> listToPathHolder = listToPath(listPath);
-                if(listToPathHolder != null) result.add(listToPathHolder);
+                if(listToPathHolder != null){
+                    result.add(listToPathHolder);
+                }
             }
         }
         return result;
