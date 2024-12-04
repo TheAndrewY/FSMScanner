@@ -71,12 +71,4 @@ public class LabeledEdge extends DefaultEdge {
         if(labels.size()==1) return labels.get(0);
         return labels.toString();
     }
-    /**
-     * Checks the equality of two labeled edges based on label, source, and target
-     *
-     * @return boolean of whether two edges are equivalent
-     */
-    boolean equals(LabeledEdge edge2){
-        return labels.equals(edge2.getLabels()) && this.getSource().equals(edge2.getSource()) && this.getTarget().equals(edge2.getTarget());
-    }
 }

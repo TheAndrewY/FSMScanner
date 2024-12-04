@@ -1,3 +1,4 @@
+import org.jetbrains.annotations.Nullable;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -50,9 +51,9 @@ public class MyUtils {
      * Method that takes in a list of LabeledEdges and converts it into a GraphPath
      *
      * @param listPath An arraylist containing ordered LabeledEdges
-     * @return GraphPath with same-ordered LabeledEdges
+     * @return GraphPath with same-ordered LabeledEdges, or null if listPath represents an invalid path
      */
-    public GraphPath<String,LabeledEdge> listToPath(List<LabeledEdge> listPath){
+    public @Nullable GraphPath<String,LabeledEdge> listToPath(List<LabeledEdge> listPath){
         // Construct a graph from the list
         DefaultDirectedGraph<String,LabeledEdge> result = new DefaultDirectedGraph<>(LabeledEdge.class);
         for(LabeledEdge x : listPath){
@@ -75,6 +76,8 @@ public class MyUtils {
         if (!resolvedPath.isEmpty()){
             return resolvedPath.get(resolvedPath.size()-1);
         }
+        // Return null if adp cannot find any valid path from pathSrc to pathTarget,
+        // usually the result of an invalid listPath provided.
         return null;
     }
     /**
