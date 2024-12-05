@@ -51,9 +51,13 @@ public class MyUtils {
      * Method that takes in a list of LabeledEdges and converts it into a GraphPath
      *
      * @param listPath An arraylist containing ordered LabeledEdges
-     * @return GraphPath with same-ordered LabeledEdges, or null if listPath represents an invalid path
+     * @return GraphPath with same-ordered LabeledEdges, or null if listPath represents an invalid path (A path is that not traversable from start to finish, based on the source and target vertices of the edges) or if listPath is empty.
      */
     public @Nullable GraphPath<String,LabeledEdge> listToPath(List<LabeledEdge> listPath){
+        // Return null here if listPath is empty
+        if(listPath.isEmpty()){
+            return null;
+        }
         // Construct a graph from the list
         DefaultDirectedGraph<String,LabeledEdge> result = new DefaultDirectedGraph<>(LabeledEdge.class);
         for(LabeledEdge x : listPath){
@@ -76,8 +80,8 @@ public class MyUtils {
         if (!resolvedPath.isEmpty()){
             return resolvedPath.get(resolvedPath.size()-1);
         }
-        // Return null if adp cannot find any valid path from pathSrc to pathTarget,
-        // usually the result of an invalid listPath provided.
+        // Return null here if adp cannot find any valid path from listPath's source to listPath's target
+        // meaning listPath represents an invalid path.
         return null;
     }
     /**
@@ -118,7 +122,7 @@ public class MyUtils {
         }
     }
     /**
-     * Generates all non-empty, ordered sub paths from a given GraphPath.
+     * Generates all non-empty, valid, ordered sub paths from a given GraphPath. This method filters out invalid paths (A path is that not traversable from start to finish)
      *
      * @param path the GraphPath from which to generate sub paths
      * @return a set of graphPaths, where each path represents a valid subpath of "path"
@@ -130,11 +134,9 @@ public class MyUtils {
         Set<GraphPath<String,LabeledEdge>> result = new TreeSet<>(Comparator.comparing(GraphPath<String,LabeledEdge>::toString));
         subpathHelper(edgeList, new ArrayList<>(), subpaths);
         for(List<LabeledEdge> listPath : subpaths){
-            if(listPath!=null){
-                GraphPath<String,LabeledEdge> listToPathHolder = listToPath(listPath);
-                if(listToPathHolder != null){
-                    result.add(listToPathHolder);
-                }
+            GraphPath<String,LabeledEdge> listToPathHolder = listToPath(listPath);
+            if(listToPathHolder != null){
+                result.add(listToPathHolder);
             }
         }
         return result;

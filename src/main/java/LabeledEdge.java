@@ -10,12 +10,12 @@ public class LabeledEdge extends DefaultEdge {
     private final ArrayList<String> labels;
 
     /**
-     * Constructs a LabeledEdge with the specified label.
+     * Constructs a LabeledEdge with the specified label(s)
      *
      * @param labels the label(s) associated with this edge
      */
     public LabeledEdge(String... labels) {
-        this.labels = new ArrayList<>(Arrays.asList(labels));
+        this(new ArrayList<>(Arrays.asList(labels)));
     }
 
     /**
@@ -68,7 +68,9 @@ public class LabeledEdge extends DefaultEdge {
      */
     @Override
     public String toString() {
-        if(labels.size()==1) return labels.get(0);
+        if(labels.size()==1){
+            return labels.get(0);
+        }
         return labels.toString();
     }
 }
