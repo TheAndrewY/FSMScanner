@@ -51,7 +51,7 @@ public class MyUtils {
      * Method that takes in a list of LabeledEdges and converts it into a GraphPath
      *
      * @param listPath An arraylist containing ordered LabeledEdges
-     * @return GraphPath with same-ordered LabeledEdges, or null if listPath represents an invalid path (A path is that not traversable from start to finish, based on the source and target vertices of the edges) or if listPath is empty.
+     * @return GraphPath with same-ordered LabeledEdges, or null if listPath represents an invalid path (A path that is not traversable from start to finish, based on the source and target vertices of the edges) or if listPath is empty.
      */
     public @Nullable GraphPath<String,LabeledEdge> listToPath(List<LabeledEdge> listPath){
         // Return null here if listPath is empty
@@ -122,7 +122,7 @@ public class MyUtils {
         }
     }
     /**
-     * Generates all non-empty, valid, ordered sub paths from a given GraphPath. This method filters out invalid paths (A path is that not traversable from start to finish)
+     * Generates all non-empty, valid, ordered sub paths from a given GraphPath. This method filters out invalid paths (A path that is not traversable from start to finish)
      *
      * @param path the GraphPath from which to generate sub paths
      * @return a set of graphPaths, where each path represents a valid subpath of "path"
