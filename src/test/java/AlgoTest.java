@@ -1,20 +1,17 @@
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.AllDirectedPaths;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-/**
- * Test Class specializing in Algorithm testing.
- */
+/** Test Class specializing in Algorithm testing. */
 public class AlgoTest {
 
     /**
@@ -88,6 +85,5 @@ public class AlgoTest {
         }
         assertTrue(expectedSubpaths.containsAll(generatedErrSubpathsString));
         assertTrue(generatedErrSubpathsString.containsAll(expectedSubpaths));
-
     }
 }

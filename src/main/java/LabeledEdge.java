@@ -27,23 +27,23 @@ public class LabeledEdge extends DefaultEdge {
         this.labels = labels;
     }
 
-    /**
-     * Returns the source vertex of this edge.
-     *
-     * @return the source vertex
-     */
-    public String getSource() {
-        return (String) super.getSource();
-    }
+  /**
+   * Returns the source vertex of this edge.
+   *
+   * @return the source vertex
+   */
+  public String getSource() {
+    return (String) super.getSource();
+  }
 
-    /**
-     * Returns the target vertex of this edge.
-     *
-     * @return the target vertex
-     */
-    public String getTarget() {
-        return (String) super.getTarget();
-    }
+  /**
+   * Returns the target vertex of this edge.
+   *
+   * @return the target vertex
+   */
+  public String getTarget() {
+    return (String) super.getTarget();
+  }
 
     /**
      * Returns the list of labels of this edge

@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.DefaultDirectedGraph;
 
 public class MyUtils {
     /**
@@ -105,9 +108,9 @@ public class MyUtils {
                     String target = matcher.group(2).trim().replaceAll("\"","");
                     String label = matcher.group(3).trim().replaceAll("\"","");
 
-                    // Ensure the vertices are added to the graph
-                    graph.addVertex(source);
-                    graph.addVertex(target);
+          // Ensure the vertices are added to the graph
+          graph.addVertex(source);
+          graph.addVertex(target);
 
                     // Add the new label to the edge if edge already
                     // exists, if it doesn't exist, create a new edge.
