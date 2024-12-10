@@ -95,4 +95,29 @@ public class AlgoTest {
     assertTrue(expectedSubpaths.containsAll(generatedErrSubpathsString));
     assertTrue(generatedErrSubpathsString.containsAll(expectedSubpaths));
   }
+
+  /**
+   * Tests the allCycles method on the provided algo-test1 FSM with a set of expected cases.
+   *
+   * @throws IOException if an I/O error occurs during the reading of the DOT file.
+   */
+  @Test
+  public void cyclesTest1() throws IOException {
+    MyUtils utils = new MyUtils();
+    DefaultDirectedGraph<String, LabeledEdge> origGraph =
+        utils.dotToFSM("src/test/resources/algo-test1");
+    List<String> expectedCycles = new ArrayList<>();
+    Set<String> generatedCyclesString = new HashSet<>();
+    // expectedCycles are the simple cycles as well as individual looping edges.
+    expectedCycles.add("[assign valid]");
+    expectedCycles.add("[free, assign valid]");
+    expectedCycles.add("[assign null, assign valid]");
+    expectedCycles.add("[free, assign null, assign valid]");
+    expectedCycles.add("[assign null]");
+    for (List<LabeledEdge> list : utils.allCycles(origGraph)) {
+      generatedCyclesString.add(list.toString());
+    }
+    assertTrue(expectedCycles.containsAll(generatedCyclesString));
+    assertTrue(generatedCyclesString.containsAll(expectedCycles));
+  }
 }

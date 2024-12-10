@@ -11,7 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.Nullable;
 import org.jgrapht.GraphPath;
+import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
 public class MyUtils {
@@ -178,5 +180,83 @@ public class MyUtils {
       subpathHelper(edgeList.subList(i + 1, edgeList.size()), current, subpaths);
       current.remove(current.size() - 1);
     }
+  }
+
+  /**
+   * Generates the power set (the set of all subsets) of the given set of labeled edges.
+   *
+   * @param originalSet the original set of labeled edges
+   * @return a list of all subsets of the original set, where each subset is a set of labeled edges
+   */
+  public List<Set<LabeledEdge>> powerSet(Set<LabeledEdge> originalSet) {
+    List<Set<LabeledEdge>> sets = new ArrayList<>();
+    if (originalSet.isEmpty()) {
+      sets.add(new HashSet<>());
+      return sets;
+    }
+    List<LabeledEdge> list = new ArrayList<>(originalSet);
+    LabeledEdge head = list.get(0);
+    Set<LabeledEdge> rest = new HashSet<>(list.subList(1, list.size()));
+    for (Set<LabeledEdge> set : powerSet(rest)) {
+      Set<LabeledEdge> newSet = new HashSet<>();
+      newSet.add(head);
+      newSet.addAll(set);
+      sets.add(newSet);
+      sets.add(set);
+    }
+    return sets;
+  }
+
+  /**
+   * Detects all simple cycles in the given directed graph using the Hawick-James algorithm. Each
+   * cycle is represented as a list of labeled edges stored in a set to prevent duplicates cycles.
+   *
+   * @param graph the directed graph in which to find cycles from
+   * @return a set of lists, where each list represents a simple cycle in the graph and its
+   *     subgraphs
+   */
+  public Set<List<LabeledEdge>> allCycles(DefaultDirectedGraph<String, LabeledEdge> graph) {
+    // Since we want to consider every cycle, we consider every subgraph and their cycles
+    // We obtain the subgraphs by getting the power set of the edge set
+    // and constructing subgraphs based on the available edges and their connecting vertices
+    ArrayList<AsSubgraph<String, LabeledEdge>> cycles = new ArrayList<>();
+    for (Set<LabeledEdge> subset : powerSet(graph.edgeSet())) {
+      cycles.add(new AsSubgraph<>(graph, null, subset));
+    }
+    Set<List<LabeledEdge>> allDetectedCycles = new HashSet<>();
+    // Create the cycle detector
+    HawickJamesSimpleCycles<String, LabeledEdge> cycleDetector = new HawickJamesSimpleCycles<>();
+    for (AsSubgraph<String, LabeledEdge> subgraph : cycles) {
+      cycleDetector.setGraph(subgraph);
+      // Obtain the simple cycles of the current subgraph, however these cycles
+      // are represented by vertices.
+      List<List<String>> detectedCycles = cycleDetector.findSimpleCycles();
+
+      for (List<String> cycle : detectedCycles) {
+        List<LabeledEdge> edgeCycle = new ArrayList<>();
+        // Perform list of vertex to list of edge conversion
+        for (int i = 0; i < cycle.size(); i++) {
+          // We get the matching edge of two vertices by searching for the specific src and target
+          // If the target's index goes over the cycle's size, then we need to "wrap around" to the
+          // front
+          // Since we know it's a cycle and that last edge points from the last vertex to the first.
+          String source = cycle.get(i);
+          String target = cycle.get((i + 1) % cycle.size());
+          LabeledEdge edge = subgraph.getEdge(source, target);
+          edgeCycle.add(edge);
+        }
+        allDetectedCycles.add(edgeCycle);
+      }
+      // Additional for loop to account for JUST looped edges, since they are also cycles.
+      for (String vertex : subgraph.vertexSet()) {
+        LabeledEdge selfLoop = subgraph.getEdge(vertex, vertex);
+        if (selfLoop != null) {
+          List<LabeledEdge> selfLoopCycle = new ArrayList<>();
+          selfLoopCycle.add(selfLoop);
+          allDetectedCycles.add(selfLoopCycle);
+        }
+      }
+    }
+    return allDetectedCycles;
   }
 }
